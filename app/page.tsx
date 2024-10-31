@@ -1,8 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
+// Assets
 import { Instagram } from "lucide-react";
 import Muscle from "@/assets/musculo.png";
-import Image from "next/image";
+// Components
 import { Button } from "@/components/ui/button";
+import { ProductsGrid } from "@/components/Home/ProductsGrid";
 
 const featuredProducts = [
   {
@@ -69,43 +72,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h2 className="text-3xl font-extrabold text-gray-900 mb-8">
-            Remeras Rhino
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white shadow-md rounded-lg overflow-hidden"
-              >
-                <Link href={`/products/${product.id}`}>
-                  <div className="h-64 relative overflow-hidden">
-                    <Image
-                      src={product.imageUrl}
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform hover:scale-105"
-                      width={400}
-                      height={400}
-                    />
-                  </div>
-                </Link>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {product.name}
-                  </h3>
-                  <p className="text-lg font-bold text-indigo-600">
-                    ${product.price.toFixed(2)}
-                  </p>
-                  <Button asChild className="mt-4 w-full">
-                    <Link href={`/products/${product.id}`}>Ver</Link>
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <ProductsGrid />
       </main>
     </div>
   );

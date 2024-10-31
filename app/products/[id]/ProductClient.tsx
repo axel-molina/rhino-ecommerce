@@ -16,14 +16,14 @@ import { Input } from "@/components/ui/input";
 import { ShoppingCart, Heart } from "lucide-react";
 import { products } from "@/data/Products";
 import Image from "next/image";
-import { Slider } from "@/components/ui/slider";
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
+    Carousel,
+    CarouselItem,
+    CarouselNext,
+    CarouselContent,
+    CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Slider } from "@/components/ui/slider";
 
 interface Product {
   id: number;
