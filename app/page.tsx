@@ -1,29 +1,30 @@
-import Link from 'next/link';
-import { Instagram } from 'lucide-react';
-import Muscle from '@/assets/musculo.png';
-import { Button } from '@/components/ui/button';
+import Link from "next/link";
+import { Instagram } from "lucide-react";
+import Muscle from "@/assets/musculo.png";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 const featuredProducts = [
   {
     id: 1,
-    name: 'Classic White Tee',
+    name: "Classic White Tee",
     price: 19.99,
     imageUrl:
-      'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=60',
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=60",
   },
   {
     id: 2,
-    name: 'Vintage Black T-Shirt',
+    name: "Vintage Black T-Shirt",
     price: 24.99,
     imageUrl:
-      'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&auto=format&fit=crop&q=60',
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&auto=format&fit=crop&q=60",
   },
   {
     id: 3,
-    name: 'Graphic Print Tee',
+    name: "Graphic Print Tee",
     price: 29.99,
     imageUrl:
-      'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=60',
+      "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=60",
   },
 ];
 
@@ -37,9 +38,9 @@ export default function Home() {
             className="absolute inset-0 z-0"
             style={{
               backgroundImage:
-                'url(https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1600&auto=format&fit=crop&q=80)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
+                "url(https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1600&auto=format&fit=crop&q=80)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
             }}
           >
             {/* Dark overlay for better text readability */}
@@ -57,7 +58,10 @@ export default function Home() {
                 size="lg"
                 className="bg-white text-indigo-700 hover:bg-gray-100 hover:scale-105 transform transition-transform duration-200"
               >
-                <Link href="/products">
+                <Link
+                  href="https://www.instagram.com/rhinolegacy/"
+                  target="_blank"
+                >
                   Seguinos
                   <Instagram className="ml-2 h-5 w-5" />
                 </Link>
@@ -68,7 +72,7 @@ export default function Home() {
 
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h2 className="text-3xl font-extrabold text-gray-900 mb-8">
-            Featured Products
+            Remeras Rhino
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProducts.map((product) => (
@@ -78,10 +82,12 @@ export default function Home() {
               >
                 <Link href={`/products/${product.id}`}>
                   <div className="h-64 relative overflow-hidden">
-                    <img
+                    <Image
                       src={product.imageUrl}
                       alt={product.name}
                       className="w-full h-full object-cover transition-transform hover:scale-105"
+                      width={400}
+                      height={400}
                     />
                   </div>
                 </Link>
@@ -93,7 +99,7 @@ export default function Home() {
                     ${product.price.toFixed(2)}
                   </p>
                   <Button asChild className="mt-4 w-full">
-                    <Link href={`/products/${product.id}`}>View Product</Link>
+                    <Link href={`/products/${product.id}`}>Ver</Link>
                   </Button>
                 </div>
               </div>
