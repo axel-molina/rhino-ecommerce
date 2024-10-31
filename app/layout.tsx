@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import CartIcon from "@/assets/icons/carrito-de-compras.png";
 import RhinoIcon from "@/assets/icons/rhino-logo.png";
+import LikeIcon from "@/assets/icons/me-gusta.png";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,10 +46,10 @@ export default function RootLayout({
                 <ul className="flex space-x-4">
                   <li>
                     <Link
-                      href="/products"
+                      href="/likes"
                       className="text-gray-600 hover:text-gray-900"
                     >
-                      Products
+                      <Image src={LikeIcon} alt="Cart" width={24} height={24} />
                     </Link>
                   </li>
                   <li>
