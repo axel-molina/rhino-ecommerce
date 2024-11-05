@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { notFound } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,31 +13,22 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { ShoppingCart, Heart } from "lucide-react";
-import { products } from "@/data/Products";
 import Image from "next/image";
 import {
-    Carousel,
-    CarouselItem,
-    CarouselNext,
-    CarouselContent,
-    CarouselPrevious,
+  Carousel,
+  CarouselItem,
+  CarouselNext,
+  CarouselContent,
+  CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Slider } from "@/components/ui/slider";
+import { useGetProductBySlug } from "@/api/getProductBySlug";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  features: string[];
-  imageUrl: string;
-}
+export default function Details() {
+  const params = useParams();
+  const { slug } = params;
 
-interface ProductClientProps {
-  product: Product;
-}
+  const { result: product, loading, error } = useGetProductBySlug(slug);
 
-export default function ProductClient({ product }: ProductClientProps) {
   const router = useRouter();
   const [size, setSize] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
@@ -60,41 +50,19 @@ export default function ProductClient({ product }: ProductClientProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Product Image */}
         <div className="relative mr-4">
-          <Carousel
-            opts={{
-              loop: true,
-              autoplay: true,
-              interval: 3000, // 3 segundos
-            }}
-          >
+          <Carousel>
             <CarouselContent>
-              <CarouselItem key={product.id}>
-                <Image
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-full h-full object-cover aspect-square rounded-xl overflow-hidden bg-gray-100"
-                  width={400}
-                  height={400}
-                />
-              </CarouselItem>
-              <CarouselItem>
-                <Image
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-full h-full object-cover aspect-square rounded-xl overflow-hidden bg-gray-100"
-                  width={400}
-                  height={400}
-                />
-              </CarouselItem>
-              <CarouselItem>
-                <Image
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-full h-full object-cover aspect-square rounded-xl overflow-hidden bg-gray-100"
-                  width={400}
-                  height={400}
-                />
-              </CarouselItem>
+              {product?.images.map((image) => (
+                <CarouselItem key={image.id}>
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${image.url}`}
+                    alt={image.name}
+                    className="w-full h-full object-cover aspect-square rounded-xl overflow-hidden bg-gray-100"
+                    width={400}
+                    height={400}
+                  />
+                </CarouselItem>
+              ))}
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
@@ -104,16 +72,18 @@ export default function ProductClient({ product }: ProductClientProps) {
         {/* Product Info */}
         <div className="flex flex-col">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {product?.productName}
+            </h1>
             <p className="mt-3 text-3xl font-bold text-indigo-600">
-              ${product.price.toFixed(2)}
+              ${product?.price.toFixed(2)}
             </p>
           </div>
 
           <div className="mt-6">
-            <h2 className="text-lg font-medium text-gray-900">Description</h2>
+            <h2 className="text-lg font-medium text-gray-900">Descripción</h2>
             <p className="mt-2 text-gray-600 text-base leading-relaxed">
-              {product.description}
+              {product?.description}
             </p>
           </div>
 
