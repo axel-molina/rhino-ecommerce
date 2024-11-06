@@ -33,42 +33,43 @@ export const ProductsGrid = () => {
         Remeras Rhino
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {featuredProducts.map((product: Product) => (
-          <div
-            key={product.id}
-            className="bg-white shadow-md rounded-lg overflow-hidden"
-          >
-            <Link href={`/detalles/${product.slug}`}>
-              <div className="h-64 relative overflow-hidden">
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${product.images[0].url}`}
-                  alt={product.productName}
-                  className="w-full h-full object-cover transition-transform hover:scale-105"
-                  width={400}
-                  height={400}
-                />
+        {featuredProducts &&
+          featuredProducts?.map((product: Product) => (
+            <div
+              key={product.id}
+              className="bg-white shadow-md rounded-lg overflow-hidden"
+            >
+              <Link href={`/detalles/${product.slug}`}>
+                <div className="h-64 relative overflow-hidden">
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${product.images[0].url}`}
+                    alt={product.productName}
+                    className="w-full h-full object-cover transition-transform hover:scale-105"
+                    width={400}
+                    height={400}
+                  />
+                </div>
+              </Link>
+              <div className="p-4">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {limitCharacters(product?.productName, 29)}
+                      </h3>
+                    </TooltipTrigger>
+                    <TooltipContent>{product?.productName}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <p className="text-lg font-bold text-indigo-600">
+                  ${product.price.toFixed(2)}
+                </p>
+                <Button asChild className="mt-4 w-full">
+                  <Link href={`/detalles/${product.slug}`}>Ver</Link>
+                </Button>
               </div>
-            </Link>
-            <div className="p-4">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {limitCharacters(product?.productName, 29)}
-                    </h3>
-                  </TooltipTrigger>
-                  <TooltipContent>{product?.productName}</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <p className="text-lg font-bold text-indigo-600">
-                ${product.price.toFixed(2)}
-              </p>
-              <Button asChild className="mt-4 w-full">
-                <Link href={`/detalles/${product.slug}`}>Ver</Link>
-              </Button>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </section>
   );

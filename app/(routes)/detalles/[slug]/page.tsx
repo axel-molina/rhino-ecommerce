@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -29,7 +29,11 @@ export default function Details() {
   const params = useParams();
   const { slug } = params;
 
-  const { result: product, loading, error } = useGetProductBySlug(slug);
+  const {
+    result: product,
+    loading,
+    error,
+  } = useGetProductBySlug(slug.toString());
 
   const router = useRouter();
   const [size, setSize] = useState<Size | null>(null);
@@ -56,7 +60,7 @@ export default function Details() {
 
     // Here you would typically add the item to a cart state or context
     // For now, we'll just simulate it by navigating to the cart page
-    alert(`Added ${quantity} ${product.name}(s) in size ${size} to cart!`);
+    // alert(`Added ${quantity} ${product?.productName}(s) in size ${size} to cart!`);
     router.push("/cart");
   };
 
@@ -68,15 +72,13 @@ export default function Details() {
     <Spinner />
   ) : error ? (
     "Error"
-  ) : !product || product.length === 0 ? (
+  ) : !product ? (
     "Product not found"
   ) : null;
 
   if (content) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        {content}
-      </div>
+      <div className="flex justify-center items-center h-screen">{content}</div>
     );
   }
 
@@ -123,7 +125,7 @@ export default function Details() {
             </p>
           </div>
 
-          {product?.sizes.length > 0 ? (
+          {product?.sizes && product?.sizes.length > 0 ? (
             <Card className="mt-8">
               <CardContent className="p-6">
                 <div className="space-y-6">
@@ -134,13 +136,20 @@ export default function Details() {
                     >
                       Talle
                     </label>
-                    <Select onValueChange={setSize}>
+                    <Select
+                      onValueChange={(value) => {
+                        const selectedSize = product?.sizes.find(
+                          (s) => s.id.toString() === value
+                        );
+                        setSize(selectedSize || null);
+                      }}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Seleccionar talle" />
                       </SelectTrigger>
                       <SelectContent>
                         {product?.sizes.map((size) => (
-                          <SelectItem key={size.id} value={size}>
+                          <SelectItem key={size.id} value={size.toString()}>
                             {size.talle}
                           </SelectItem>
                         ))}

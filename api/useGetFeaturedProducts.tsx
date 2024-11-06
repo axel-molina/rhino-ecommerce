@@ -1,10 +1,11 @@
+import { Product } from "@/models/interfaces/Product.interface";
 import { useState, useEffect } from "react";
 
 export function useGetFeaturedProducts() {
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?populate=*`;
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<Product[] | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any>(null);
 
   useEffect(() => {
     (async () => {
