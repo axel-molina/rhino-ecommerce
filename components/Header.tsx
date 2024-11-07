@@ -3,7 +3,7 @@ import Image from "next/image";
 import { SheetContent, Sheet, SheetTrigger } from "./ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import RhinoIcon from "@/assets/icons/rhino-logo.png";
+// import RhinoIcon from "@/assets/icons/rhino-logo.png";
 import LikeIcon from "@/assets/icons/me-gusta.png";
 import CartIcon from "@/assets/icons/carrito-de-compras.png";
 export const Header = () => {
@@ -11,7 +11,12 @@ export const Header = () => {
     <header className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center">
         <Link href="/" className="flex items-center space-x-2">
-          <Image src={RhinoIcon} alt="Rhino Legacy" width={60} height={60} />
+          <Image
+            src="https://t3.ftcdn.net/jpg/04/37/20/96/360_F_437209681_ZiV2FR8HuWgio4FOuKgVdynNWTcKlHtB.jpg"
+            alt="Rhino Legacy"
+            width={60}
+            height={60}
+          />
           <span className="text-2xl font-bold text-gray-900">Rhino Legacy</span>
         </Link>
 
