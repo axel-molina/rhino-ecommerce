@@ -1,12 +1,20 @@
+"use client";
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { SheetContent, Sheet, SheetTrigger } from "./ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-// import RhinoIcon from "@/assets/icons/rhino-logo.png";
+// Assets
 import LikeIcon from "@/assets/icons/me-gusta.png";
 import CartIcon from "@/assets/icons/carrito-de-compras.png";
+// Store
+import useProductsStore from "@/store/useProducts.store";
 export const Header = () => {
+  const { fetchProducts } = useProductsStore();
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
   return (
     <header className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center">
@@ -29,7 +37,10 @@ export const Header = () => {
               </Link>
             </li>
             <li>
-              <Link href="/cart" className="text-gray-600 hover:text-gray-900">
+              <Link
+                href="/carrito"
+                className="text-gray-600 hover:text-gray-900"
+              >
                 <Image src={CartIcon} alt="Cart" width={24} height={24} />
               </Link>
             </li>
@@ -50,13 +61,13 @@ export const Header = () => {
                 href="/likes"
                 className="text-lg font-medium text-gray-600 hover:text-gray-900"
               >
-                <Image src={LikeIcon} alt="Cart" width={24} height={24} />
+                Me gusta
               </Link>
               <Link
-                href="/cart"
+                href="/carrito"
                 className="text-lg font-medium text-gray-600 hover:text-gray-900"
               >
-                <Image src={CartIcon} alt="Cart" width={24} height={24} />
+                Carrito
               </Link>
             </nav>
           </SheetContent>

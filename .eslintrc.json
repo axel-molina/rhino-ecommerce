@@ -1,7 +1,8 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "no-unused-vars": "warn",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
+    "no-undef": "error" // Indica si no está declarada una función o una variable
   }
 }

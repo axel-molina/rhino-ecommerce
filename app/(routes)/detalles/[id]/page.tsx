@@ -21,22 +21,19 @@ import {
   CarouselContent,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useGetProductBySlug } from "@/api/getProductBySlug";
 import { Spinner } from "@/components/ui/spinner";
 import { Size } from "@/models/interfaces/Size.interface";
+import useProductsStore from "@/store/useProducts.store";
 
 export default function Details() {
   const params = useParams();
-  const { slug } = params;
+  const { id } = params;
 
-  const {
-    result: product,
-    loading,
-    error,
-  } = useGetProductBySlug(slug.toString());
+  const { product, loading, error, fetchProduct } = useProductsStore();
 
   const router = useRouter();
   const [size, setSize] = useState<Size | null>(null);
+  const [color, setColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
 
   const handleQuantityChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,12 +42,19 @@ export default function Details() {
       alert("Primero elija un talle");
       return;
     }
-    if (currentQuantity > size.stock) {
+    if (!color) {
+      alert("Primero elija un color");
+      return;
+    }
+    if (currentQuantity > product?.stock) {
       alert("No hay stock disponible");
+      setQuantity(product?.stock);
     } else {
       setQuantity(currentQuantity);
     }
   };
+
+  console.log(product?.images);
 
   const handleAddToCart = () => {
     if (!size) {
@@ -67,6 +71,11 @@ export default function Details() {
   useEffect(() => {
     setQuantity(1);
   }, [size]);
+
+  useEffect(() => {
+    fetchProduct(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const content = loading ? (
     <Spinner />
@@ -90,10 +99,10 @@ export default function Details() {
           <Carousel>
             <CarouselContent>
               {product?.images.map((image) => (
-                <CarouselItem key={image.id}>
+                <CarouselItem key={image}>
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${image.url}`}
-                    alt={image.name}
+                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${image}`}
+                    alt={product?.name}
                     className="w-full h-full object-cover aspect-square rounded-xl overflow-hidden bg-gray-100"
                     width={400}
                     height={400}
@@ -111,7 +120,7 @@ export default function Details() {
         <div className="flex flex-col">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
-              {product?.productName}
+              {product?.name}
             </h1>
             <p className="mt-3 text-3xl font-bold text-indigo-600">
               ${product?.price.toFixed(2)}
@@ -125,7 +134,7 @@ export default function Details() {
             </p>
           </div>
 
-          {product?.sizes && product?.sizes.length > 0 ? (
+          {product?.size && product?.size.length > 0 ? (
             <Card className="mt-8">
               <CardContent className="p-6">
                 <div className="space-y-6">
@@ -138,8 +147,8 @@ export default function Details() {
                     </label>
                     <Select
                       onValueChange={(value) => {
-                        const selectedSize = product?.sizes.find(
-                          (s) => s.id.toString() === value
+                        const selectedSize = product?.size.find(
+                          (s) => s === value
                         );
                         setSize(selectedSize || null);
                       }}
@@ -148,9 +157,37 @@ export default function Details() {
                         <SelectValue placeholder="Seleccionar talle" />
                       </SelectTrigger>
                       <SelectContent>
-                        {product?.sizes.map((size) => (
-                          <SelectItem key={size.id} value={size.toString()}>
-                            {size.talle}
+                        {product?.size?.map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {s}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="color"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Color
+                    </label>
+                    <Select
+                      onValueChange={(value) => {
+                        const selectedColor = product?.color.find(
+                          (c) => c === value
+                        );
+                        setColor(selectedColor || null);
+                      }}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Seleccionar color" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {product?.color?.map((c) => (
+                          <SelectItem key={c} value={c}>
+                            {c}
                           </SelectItem>
                         ))}
                       </SelectContent>
