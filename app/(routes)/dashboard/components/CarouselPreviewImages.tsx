@@ -9,23 +9,23 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { type CarouselApi } from "@/components/ui/carousel";
-// Models
-import { Product } from "@/models/interface/Product.interface";
 // Assets
 import { Trash } from "lucide-react";
+// Store
+import useProductsStore from "@/store/useProducts.store";
 
 interface ICarouselPreviewImages {
-  newProduct: Product;
   handleRemoveImage: any;
 }
 
 export const CarouselPreviewImages = ({
-  newProduct,
   handleRemoveImage,
 }: ICarouselPreviewImages) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [isRemoved, setIsRemoved] = useState(false);
+
+  const { newProduct } = useProductsStore();
 
   useEffect(() => {
     if (!api) {

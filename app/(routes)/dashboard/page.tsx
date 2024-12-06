@@ -1,11 +1,5 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-// service
-import { supabase } from "@/utils/supabase/client";
-import useProductsStore from "@/store/useProducts.store";
-// Components
+// Ui
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -16,58 +10,14 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
+// Components
 import { ListProducts } from "./components/ListProducts";
 import { AddProductForm } from "./components/AddProductForm";
-import Status from "@/models/enum/Status.enum";
-import { Product } from "@/models/interface/Product.interface";
+// Hooks
+import { useDashboardHook } from "./hooks/useDashboardHook";
 
 export default function Dashboard() {
-  const { addProduct, loading, status } = useProductsStore();
-  const [newProduct, setNewProduct] = useState<Product>({
-    name: "",
-    price: 0,
-    description: "",
-    stock: 0,
-    color: [],
-    size: [],
-    images: [],
-  });
-
-  const [user, setUser] = useState(null);
-  const router = useRouter();
-
-  const handleAddProduct = () => {
-    addProduct(newProduct);
-  };
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data?.session) {
-        setUser(data.session.user);
-      } else {
-        router.push("/login");
-      }
-    });
-  }, [router]);
-
-  useEffect(() => {
-    if (status === Status.successAddProduct) {
-      setNewProduct({
-        name: "",
-        price: 0,
-        description: "",
-        stock: 0,
-        color: [],
-        size: [],
-        images: [],
-      });
-    }
-  }, [status]);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/login");
-  };
+  const { user, handleAddProduct, handleLogout, loading } = useDashboardHook();
 
   if (!user) return <p>Cargando...</p>;
 
@@ -110,8 +60,6 @@ export default function Dashboard() {
             <CardContent className="space-y-2">
               {/* Formulario Agregar Producto */}
               <AddProductForm
-                setNewProduct={setNewProduct}
-                newProduct={newProduct}
                 type="add"
               />
             </CardContent>

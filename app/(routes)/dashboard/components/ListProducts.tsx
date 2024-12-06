@@ -42,6 +42,7 @@ export const ListProducts = () => {
       });
       setStatus(null);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   if (loading) return <p>Cargando...</p>;

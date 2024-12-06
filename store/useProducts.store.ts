@@ -10,7 +10,17 @@ const useProductsStore = create((set) => ({
   loading: false,
   error: null,
   status: null | StatusEnum,
+  newProduct: {
+    name: "",
+    price: 0,
+    description: "",
+    stock: 0,
+    color: [],
+    size: [],
+    images: [],
+  } as Product,
   setStatus: (status: StatusEnum | null) => set({ status }),
+  setNewProduct: (newProduct: Product) => set({ newProduct }),
 
   // Traer productos
   fetchProducts: async () => {
@@ -46,14 +56,9 @@ const useProductsStore = create((set) => ({
   addProduct: async (product: Product) => {
     set({ loading: true, error: null, status: null });
     try {
-      const { data, error } = await supabase.from("products").insert(product);
+      const { error } = await supabase.from("products").insert(product);
       if (error) throw error;
       set({ loading: false, status: StatusEnum.successAddProduct });
-      // Agregar al array de producto
-      set((state) => {
-        state.products.push(data);
-        return { products: state.products };
-      });
     } catch (err) {
       set({
         error: err.message,

@@ -1,125 +1,34 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 // Components
 import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Product } from "@/models/interface/Product.interface";
 import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
-// Enum
-import Status from "@/models/enum/Status.enum";
-// Hooks
-import { useToast } from "@/hooks/use-toast";
-// Services
-import useProductsStore from "@/store/useProducts.store";
 // Assets
 import uploadImages from "../assets/subir-imagen.png";
 import { CarouselPreviewImages } from "./CarouselPreviewImages";
+// Custom Hooks
+import { useAddProductFormHook } from "../hooks/useAddProductFormHook";
+// Store
+import useProductsStore from "@/store/useProducts.store";
 
 interface IAddProductForm {
-  setNewProduct: React.Dispatch<React.SetStateAction<Product>>;
-  newProduct: Product;
   type: "add" | "edit";
 }
 
-export const AddProductForm = ({
-  type,
-  newProduct,
-  setNewProduct,
-}: IAddProductForm) => {
-  const [imagesPreview, setImagesPreview] = useState<string[]>([]);
-  const [imagesAux, setImagesAux] = useState<string[]>([]);
-  const { status, setStatus } = useProductsStore();
-  const { toast } = useToast();
-
-  const handleChangeArray = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const array = value.split(",").map((item) => item.trim());
-    setNewProduct({ ...newProduct, [name]: array });
-  };
-
-  const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewProduct({ ...newProduct, [name]: value });
-  };
-
-  const handleFilesChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-
-    // Validación de que se seleccione al menos una imagen
-    if (!files?.length && !imagesPreview?.length) {
-      toast({
-        title: "Error",
-        description: "Selecciona al menos una imagen para tu producto.",
-      });
-      return;
-    }
-
-    // Validación de maximo de 4 imágenes
-    if (files?.length > 4) {
-      toast({
-        title: "Error",
-        description: "No puedes subir más de 4 imágenes.",
-      });
-      return;
-    }
-
-    // Validación de tamaño de imagen, hasta 5mb
-    if (files?.length) {
-      const fileSize = files[0].size;
-      if (fileSize > 5 * 1024 * 1024) {
-        toast({
-          title: "Error",
-          description: "El tamaño de la imagen no puede ser superior a 5mb.",
-        });
-        return;
-      }
-    }
-
-    const imagesArray: string[] = [];
-    const reader = new FileReader();
-
-    const loadFile = (index: number) => {
-      if (index >= files.length) {
-        setImagesAux((prevImages) => [...prevImages, ...imagesArray]);
-        setNewProduct({ ...newProduct, images: imagesAux });
-        return;
-      }
-      reader.readAsDataURL(files[index]);
-      reader.onload = () => {
-        setImagesPreview((prevImages) => [
-          ...prevImages,
-          reader.result as string,
-        ]);
-        imagesArray.push(reader.result as string);
-        loadFile(index + 1);
-      };
-    };
-
-    loadFile(0);
-  };
-
-  console.log("images preview: ", imagesPreview);
-  console.log("images form: ", newProduct.images);
-  console.log("setImagesAux: ", imagesAux);
-
-  const handleRemoveImage = (image: string) => {
-    const imagesArray = newProduct.images.filter((img) => img !== image);
-    setNewProduct({ ...newProduct, images: imagesArray });
-    setImagesPreview(imagesArray);
-  };
-
-  useEffect(() => {
-    if (status === Status.successAddProduct) {
-      toast({
-        title: "Producto creado",
-        description: "El producto ha sido creado exitosamente",
-      });
-      setStatus(null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
+export const AddProductForm = ({ type }: IAddProductForm) => {
+  // Store
+  const { newProduct, setNewProduct } = useProductsStore();
+  // Custom Hook
+  const {
+    imagesPreview,
+    handleRemoveImage,
+    handleFilesChange,
+    handleChangeInput,
+    handleChangeArray,
+  } = useAddProductFormHook();
 
   return (
     <div>
@@ -241,10 +150,7 @@ export const AddProductForm = ({
           </Label>
           {/* Preview Image */}
           {imagesPreview?.length > 0 && (
-            <CarouselPreviewImages
-              newProduct={newProduct}
-              handleRemoveImage={handleRemoveImage}
-            />
+            <CarouselPreviewImages handleRemoveImage={handleRemoveImage} />
           )}
         </Form>
       </div>
