@@ -17,7 +17,7 @@ import { AddProductForm } from "./components/AddProductForm";
 import { useDashboardHook } from "./hooks/useDashboardHook";
 
 export default function Dashboard() {
-  const { user, handleAddProduct, handleLogout, loading } = useDashboardHook();
+  const { user, handleAddOrEditProduct, handleLogout, loading } = useDashboardHook();
 
   if (!user) return <p>Cargando...</p>;
 
@@ -64,7 +64,7 @@ export default function Dashboard() {
               />
             </CardContent>
             <CardFooter className="flex justify-center w-full">
-              <Button className="w-full" onClick={handleAddProduct}>
+              <Button className="w-full" onClick={handleAddOrEditProduct}>
                 {loading ? "Agregando..." : "Agregar"}
               </Button>
             </CardFooter>

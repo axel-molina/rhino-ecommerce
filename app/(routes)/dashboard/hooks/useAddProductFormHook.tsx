@@ -9,8 +9,14 @@ import Status from "@/models/enum/Status.enum";
 export const useAddProductFormHook = () => {
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
   const [imagesAux, setImagesAux] = useState<string[]>([]);
-  const { status, setStatus, fetchProducts, newProduct, setNewProduct } =
-    useProductsStore();
+  const {
+    status,
+    setStatus,
+    fetchProducts,
+    newProduct,
+    setNewProduct,
+    resetNewProduct,
+  } = useProductsStore();
   const { toast } = useToast();
 
   const handleChangeArray = (e: ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +30,10 @@ export const useAddProductFormHook = () => {
     setNewProduct({ ...newProduct, [name]: value });
   };
 
-  const handleFilesChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFilesChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    type?: "add" | "edit"
+  ) => {
     const files = e.target.files;
 
     // Validación de que se seleccione al menos una imagen
@@ -57,7 +66,7 @@ export const useAddProductFormHook = () => {
       }
     }
 
-    const imagesArray: string[] = [];
+    const imagesArray: string[] = type === "edit" ? newProduct.images : [];
     const reader = new FileReader();
 
     const loadFile = (index: number) => {
@@ -105,6 +114,11 @@ export const useAddProductFormHook = () => {
     setNewProduct({ ...newProduct, images: imagesAux });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imagesAux]);
+
+  useEffect(() => {
+    resetNewProduct();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     imagesPreview,

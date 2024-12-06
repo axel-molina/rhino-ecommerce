@@ -5,7 +5,6 @@ import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/toaster";
-import { Button } from "@/components/ui/button";
 // Assets
 import uploadImages from "../assets/subir-imagen.png";
 import { CarouselPreviewImages } from "./CarouselPreviewImages";
@@ -14,13 +13,9 @@ import { useAddProductFormHook } from "../hooks/useAddProductFormHook";
 // Store
 import useProductsStore from "@/store/useProducts.store";
 
-interface IAddProductForm {
-  type: "add" | "edit";
-}
-
-export const AddProductForm = ({ type }: IAddProductForm) => {
+export const AddProductForm = () => {
   // Store
-  const { newProduct, setNewProduct } = useProductsStore();
+  const { newProduct } = useProductsStore();
   // Custom Hook
   const {
     imagesPreview,
@@ -108,44 +103,24 @@ export const AddProductForm = ({ type }: IAddProductForm) => {
           </Label>
           <Label htmlFor="image">
             Imagen
-            {newProduct.image !== "" && type === "edit" ? (
-              <div className="flex flex-column items-center gap-2">
-                <Button
-                  variant={"link"}
-                  size={"sm"}
-                  onClick={() => {
-                    setNewProduct({ ...newProduct, images: "" });
-                  }}
-                >
-                  Eliminar imagen
-                </Button>
-                <Image
-                  src={newProduct.images}
-                  width={100}
-                  height={100}
-                  alt="image"
-                ></Image>
-              </div>
-            ) : (
-              <div className="relative w-full h-10 bg-blue-500 rounded-md border-gray-300 px-6 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm">
-                <input
-                  id="image"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  max={4}
-                  onChange={(e) => handleFilesChange(e)}
-                  className="hidden"
-                />
-                <Image
-                  src={uploadImages}
-                  alt="subir imagen"
-                  className="absolute left-1/2 transform -translate-x-1/2 top-2 w-6 h-6"
-                  width={100}
-                  height={100}
-                />
-              </div>
-            )}
+            <div className="relative w-full h-10 bg-blue-500 rounded-md border-gray-300 px-6 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm">
+              <input
+                id="image"
+                type="file"
+                multiple
+                accept="image/*"
+                max={4}
+                onChange={(e) => handleFilesChange(e)}
+                className="hidden"
+              />
+              <Image
+                src={uploadImages}
+                alt="subir imagen"
+                className="absolute left-1/2 transform -translate-x-1/2 top-2 w-6 h-6"
+                width={100}
+                height={100}
+              />
+            </div>
             <p className="text-gray-400 text-sm">Máximo de 4 imágenes</p>
           </Label>
           {/* Preview Image */}

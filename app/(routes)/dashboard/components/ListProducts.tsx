@@ -25,7 +25,8 @@ import { Pencil } from "lucide-react";
 
 export const ListProducts = () => {
   const { toast } = useToast();
-  const { products, loading, error, status, setStatus } = useProductsStore();
+  const { products, loading, error, status, setStatus, setNewProduct } =
+    useProductsStore();
 
   useEffect(() => {
     if (status === Status.successDeleteProduct) {
@@ -42,7 +43,7 @@ export const ListProducts = () => {
       });
       setStatus(null);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   if (loading) return <p>Cargando...</p>;
@@ -82,8 +83,8 @@ export const ListProducts = () => {
               {limitCharacters(formatArrayToString(product?.size), 15)}
             </TableCell>
             <TableCell className="text-right">${product?.price}</TableCell>
-            <TableCell>
-              <ModalEditProduct product={product} />
+            <TableCell onClick={() => setNewProduct(product)}>
+              <ModalEditProduct />
             </TableCell>
             <TableCell>
               <ModalDeleteProduct

@@ -11,8 +11,14 @@ import { useToast } from "@/hooks/use-toast";
 
 export const useDashboardHook = () => {
   const { toast } = useToast();
-  const { addProduct, loading, status, newProduct, setNewProduct } =
-    useProductsStore();
+  const {
+    addProduct,
+    loading,
+    status,
+    newProduct,
+    setNewProduct,
+    editProduct,
+  } = useProductsStore();
 
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
@@ -41,10 +47,10 @@ export const useDashboardHook = () => {
     return true;
   };
 
-  // Agregar producto
-  const handleAddProduct = () => {
+  // Agregar o editar producto
+  const handleAddOrEditProduct = (type?: "add" | "edit") => {
     if (validateProduct()) {
-      addProduct(newProduct);
+      type === "edit" ? editProduct(newProduct) : addProduct(newProduct);
     }
   };
 
@@ -92,5 +98,5 @@ export const useDashboardHook = () => {
     router.push("/login");
   };
 
-  return { user, handleAddProduct, handleLogout, loading, error };
+  return { user, handleAddOrEditProduct, handleLogout, loading, error };
 };

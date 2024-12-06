@@ -21,6 +21,18 @@ const useProductsStore = create((set) => ({
   } as Product,
   setStatus: (status: StatusEnum | null) => set({ status }),
   setNewProduct: (newProduct: Product) => set({ newProduct }),
+  resetNewProduct: () =>
+    set({
+      newProduct: {
+        name: "",
+        price: 0,
+        description: "",
+        stock: 0,
+        color: [],
+        size: [],
+        images: [],
+      },
+    }),
 
   // Traer productos
   fetchProducts: async () => {
