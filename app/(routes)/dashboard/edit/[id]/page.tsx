@@ -1,31 +1,67 @@
-import React from "react";
-// Components
+/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
+import { useEffect } from "react";
+import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+// Ui
 import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/toaster";
+// Components
+import { Button } from "@/components/ui/button";
+import { CarouselPreviewImages } from "../../components/CarouselPreviewImages";
 // Assets
-import { CarouselPreviewImages } from "./CarouselPreviewImages";
-// Custom Hooks
-import { useAddProductFormHook } from "../hooks/useAddProductFormHook";
-// Store
+import uploadImages from "../../assets/subir-imagen.png";
+// Services
 import useProductsStore from "@/store/useProducts.store";
+//Hooks
+import { useToast } from "@/hooks/use-toast";
+import { useDashboardHook } from "../../hooks/useDashboardHook";
+import { useAddProductFormHook } from "../../hooks/useAddProductFormHook";
+// Enums
+import Status from "@/models/enum/Status.enum";
 
-export const AddProductForm = () => {
-  // Store
-  const { newProduct } = useProductsStore();
-  // Custom Hook
+export default function Edit() {
+  const router = useRouter();
+  const params = useParams();
+  const { id } = params;
+
+  const { toast } = useToast();
+  const { fetchProduct, newProduct, status, setStatus } = useProductsStore();
   const {
-    imagesPreview,
-    handleRemoveImage,
-    handleFilesChange,
     handleChangeInput,
     handleChangeArray,
+    handleFilesChange,
+    handleRemoveImage,
   } = useAddProductFormHook();
+  const { handleAddOrEditProduct } = useDashboardHook();
+
+  useEffect(() => {
+    fetchProduct(id);
+  }, [id]);
+
+  useEffect(() => {
+    if (status === Status.successDeleteProduct) {
+      toast({
+        title: "Producto eliminado",
+        description: "El producto ha sido eliminado exitosamente",
+      });
+      setStatus(null);
+    }
+    if (status === Status.successEditProduct) {
+      toast({
+        title: "Producto editado",
+        description: "El producto ha sido editado exitosamente",
+      });
+      setStatus(null);
+      router.push(`/dashboard`);
+    }
+  }, [status]);
 
   return (
     <div>
-      <div className="columns-1 md:columns-2 gap-10">
+      <div className="columns-1 md:columns-2 gap-10 m-8">
         <Form>
           <Label htmlFor="name">
             Nombre
@@ -108,20 +144,41 @@ export const AddProductForm = () => {
                 multiple
                 accept="image/*"
                 max={4}
-                onChange={(e) => handleFilesChange(e)}
+                onChange={(e) => handleFilesChange(e, "edit")}
                 className="hidden"
               />
-              <p className="text-white text-center mt-1">Subir imagen</p>
+              <Image
+                src={uploadImages}
+                alt="subir imagen"
+                className="absolute left-1/2 transform -translate-x-1/2 top-2 w-6 h-6"
+                width={100}
+                height={100}
+              />
             </div>
             <p className="text-gray-400 text-sm">Máximo de 4 imágenes</p>
           </Label>
           {/* Preview Image */}
-          {imagesPreview?.length > 0 && (
+          {newProduct.images?.length > 0 && (
             <CarouselPreviewImages handleRemoveImage={handleRemoveImage} />
           )}
         </Form>
       </div>
+      <div className="flex justify-end mr-4 ml-4 gap-4">
+        <Button
+          className="w-full"
+          onClick={() => handleAddOrEditProduct("edit")}
+        >
+          Editar
+        </Button>
+        <Button
+          className="w-full"
+          variant={"outline"}
+          onClick={() => router.push(`/dashboard`)}
+        >
+          Cancelar
+        </Button>
+      </div>
       <Toaster />
     </div>
   );
-};
+}

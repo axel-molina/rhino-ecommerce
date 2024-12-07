@@ -11,13 +11,17 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 // Components
+import { Pagination } from "@/components/Pagination";
 import { ListProducts } from "./components/ListProducts";
 import { AddProductForm } from "./components/AddProductForm";
 // Hooks
 import { useDashboardHook } from "./hooks/useDashboardHook";
+import useProductsStore from "@/store/useProducts.store";
 
 export default function Dashboard() {
-  const { user, handleAddOrEditProduct, handleLogout, loading } = useDashboardHook();
+  const { user, handleAddOrEditProduct, handleLogout, loading } =
+    useDashboardHook();
+  const { products } = useProductsStore();
 
   if (!user) return <p>Cargando...</p>;
 
@@ -47,6 +51,7 @@ export default function Dashboard() {
               {/* Lista de productos */}
               <ListProducts />
             </CardContent>
+            {products.length !== 0 && <Pagination />}
           </Card>
         </TabsContent>
         <TabsContent value="add">
@@ -59,9 +64,7 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent className="space-y-2">
               {/* Formulario Agregar Producto */}
-              <AddProductForm
-                type="add"
-              />
+              <AddProductForm type="add" />
             </CardContent>
             <CardFooter className="flex justify-center w-full">
               <Button className="w-full" onClick={handleAddOrEditProduct}>

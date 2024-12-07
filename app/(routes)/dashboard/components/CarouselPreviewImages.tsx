@@ -23,7 +23,6 @@ export const CarouselPreviewImages = ({
 }: ICarouselPreviewImages) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
-  const [isRemoved, setIsRemoved] = useState(false);
 
   const { newProduct } = useProductsStore();
 
@@ -42,10 +41,7 @@ export const CarouselPreviewImages = ({
       <Carousel setApi={setApi}>
         <button
           className="rounded-full p-2 bg-red-600 z-10 top-1 left-1 cursor-pointer hover:bg-red-500 absolute"
-          onClick={() => {
-            setIsRemoved(!isRemoved);
-            handleRemoveImage(newProduct.images[current - 1]);
-          }}
+          onClick={() => handleRemoveImage(newProduct.images[current - 1])}
         >
           <Trash size={20} color="white" strokeWidth={2} />
         </button>

@@ -105,7 +105,7 @@ export const useAddProductFormHook = () => {
       setNewProduct({ ...newProduct, images: [] });
       setImagesPreview([]);
       setImagesAux([]);
-      fetchProducts();
+      fetchProducts(1, 10);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);

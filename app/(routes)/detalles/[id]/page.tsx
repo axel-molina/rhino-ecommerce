@@ -54,8 +54,6 @@ export default function Details() {
     }
   };
 
-  console.log(product?.images);
-
   const handleAddToCart = () => {
     if (!size) {
       alert("Please select a size");

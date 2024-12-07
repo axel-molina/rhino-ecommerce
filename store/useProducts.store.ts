@@ -6,6 +6,8 @@ import StatusEnum from "@/models/enum/Status.enum";
 
 const useProductsStore = create((set) => ({
   products: [] as Product[],
+  totalProducts: 0 as number,
+  totalPages: 0 as number,
   product: null as Product | null,
   loading: false,
   error: null,
@@ -35,12 +37,22 @@ const useProductsStore = create((set) => ({
     }),
 
   // Traer productos
-  fetchProducts: async () => {
+  fetchProducts: async (page: number, limit: number) => {
+    const start = (page - 1) * limit;
+    const end = start + limit - 1;
     set({ loading: true, error: null });
     try {
-      const { data, error } = await supabase.from("products").select("*");
+      const { data, error, count } = await supabase
+        .from("products")
+        .select("*", { count: "exact" })
+        .range(start, end);
       if (error) throw error;
-      set({ products: data, loading: false });
+      set({
+        products: data,
+        loading: false,
+        totalProducts: count,
+        totalPages: Math.ceil(count / limit),
+      });
     } catch (err) {
       set({ error: err.message, loading: false });
     }
@@ -55,7 +67,7 @@ const useProductsStore = create((set) => ({
         .select("*")
         .eq("id", id);
       if (error) throw error;
-      set({ product: data[0], loading: false });
+      set({ product: data[0], loading: false, newProduct: data[0] });
     } catch (err) {
       set({
         error: err.message,

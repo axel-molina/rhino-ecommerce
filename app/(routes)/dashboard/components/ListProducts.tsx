@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 // Components
 import {
   Table,
@@ -11,7 +13,6 @@ import {
 import ModalDeleteProduct from "./ModalDeleteProduct";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
-import ModalEditProduct from "./ModalEditProduct";
 // Utils
 import { limitCharacters, formatArrayToString } from "@/lib/utils";
 // Store
@@ -25,8 +26,14 @@ import { Pencil } from "lucide-react";
 
 export const ListProducts = () => {
   const { toast } = useToast();
-  const { products, loading, error, status, setStatus, setNewProduct } =
+  const { products, loading, error, status, setStatus, fetchProducts } =
     useProductsStore();
+
+  const router = useRouter();
+
+  const goToEditProduct = (id: number) => {
+    router.push(`/dashboard/edit/${id}`);
+  };
 
   useEffect(() => {
     if (status === Status.successDeleteProduct) {
@@ -43,8 +50,11 @@ export const ListProducts = () => {
       });
       setStatus(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
+
+  useEffect(() => {
+    fetchProducts(1, 10);
+  }, []);
 
   if (loading) return <p>Cargando...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -83,8 +93,10 @@ export const ListProducts = () => {
               {limitCharacters(formatArrayToString(product?.size), 15)}
             </TableCell>
             <TableCell className="text-right">${product?.price}</TableCell>
-            <TableCell onClick={() => setNewProduct(product)}>
-              <ModalEditProduct />
+            <TableCell onClick={() => goToEditProduct(product?.id)}>
+              <div className="flex justify-center items-center bg-green-500 p-2 rounded-md text-white">
+                <Pencil className="h-4 w-4" />
+              </div>
             </TableCell>
             <TableCell>
               <ModalDeleteProduct

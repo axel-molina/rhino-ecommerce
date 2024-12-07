@@ -11,14 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 
 export const useDashboardHook = () => {
   const { toast } = useToast();
-  const {
-    addProduct,
-    loading,
-    status,
-    newProduct,
-    setNewProduct,
-    editProduct,
-  } = useProductsStore();
+  const { addProduct, status, newProduct, setNewProduct, editProduct } =
+    useProductsStore();
 
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
@@ -98,5 +92,5 @@ export const useDashboardHook = () => {
     router.push("/login");
   };
 
-  return { user, handleAddOrEditProduct, handleLogout, loading, error };
+  return { user, handleAddOrEditProduct, handleLogout, error };
 };

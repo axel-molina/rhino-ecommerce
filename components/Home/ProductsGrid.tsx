@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 // Models
@@ -19,7 +21,11 @@ import {
 import useProductsStore from "@/store/useProducts.store";
 
 export const ProductsGrid = () => {
-  const { products, loading, error } = useProductsStore();
+  const { products, loading, error, fetchProducts } = useProductsStore();
+
+  useEffect(() => {
+    fetchProducts(1, 10);
+  }, []);
 
   if (loading) {
     return (
@@ -57,7 +63,7 @@ export const ProductsGrid = () => {
               <Link href={`/detalles/${product.id}`}>
                 <div className="h-64 relative overflow-hidden">
                   <Image
-                    src={product.image}
+                    src={product.images[0]}
                     alt={product.name}
                     className="w-full h-full object-cover transition-transform hover:scale-105"
                     width={400}

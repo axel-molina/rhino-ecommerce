@@ -1,5 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { SheetContent, Sheet, SheetTrigger } from "./ui/sheet";
@@ -8,13 +8,7 @@ import { Menu } from "lucide-react";
 // Assets
 import LikeIcon from "@/assets/icons/me-gusta.png";
 import CartIcon from "@/assets/icons/carrito-de-compras.png";
-// Store
-import useProductsStore from "@/store/useProducts.store";
 export const Header = () => {
-  const { fetchProducts } = useProductsStore();
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
   return (
     <header className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center">
